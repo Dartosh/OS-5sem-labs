@@ -1,2 +1,2 @@
 # OS-Labs
-First laboratory work
+Laboratory work of OS subject
