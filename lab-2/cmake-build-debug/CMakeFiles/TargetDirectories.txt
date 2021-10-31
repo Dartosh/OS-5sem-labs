@@ -1,0 +1,3 @@
+D:/Sem5/OC/cmake-build-debug/CMakeFiles/OC.dir
+D:/Sem5/OC/cmake-build-debug/CMakeFiles/edit_cache.dir
+D:/Sem5/OC/cmake-build-debug/CMakeFiles/rebuild_cache.dir
