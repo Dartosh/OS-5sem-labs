@@ -1,0 +1,30 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+C:/Users/J/OS-5sem-labs/lab-2/Point.h
+string
+-
+
+C:/Users/J/OS-5sem-labs/lab-2/main.cpp
+iostream
+-
+condition_variable
+-
+thread
+-
+fstream
+-
+string
+-
+ctime
+-
+memory
+-
+Point.h
+C:/Users/J/OS-5sem-labs/lab-2/Point.h
+
