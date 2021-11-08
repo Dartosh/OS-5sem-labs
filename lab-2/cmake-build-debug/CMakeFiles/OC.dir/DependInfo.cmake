@@ -8,7 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "D:/Sem5/OC/main.cpp" "D:/Sem5/OC/cmake-build-debug/CMakeFiles/OC.dir/main.cpp.obj"
+  "C:/Users/J/OS-5sem-labs/lab-2/main.cpp" "C:/Users/J/OS-5sem-labs/lab-2/cmake-build-debug/CMakeFiles/OC.dir/main.cpp.obj"
   )
 set(CMAKE_CXX_COMPILER_ID "MSVC")
 

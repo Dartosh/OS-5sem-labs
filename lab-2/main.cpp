@@ -83,7 +83,7 @@ void log_writer() {
 }
 
 int main() {
-    thread factorial(factorial_calculation, rand() % 10);
+    thread factorial(factorial_calculation, 10);
     thread result(result_listener);
     thread log(log_writer);
 
