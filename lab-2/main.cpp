@@ -18,13 +18,12 @@ int current_function_value = 1;
 int current_argument_value = 1;
 fstream function_result;
 
-
 void init_file(char filename[]) {
     function_result.open(filename,  fstream::in | fstream::out | fstream::trunc);
     function_result.close();
 }
 
-void write_function_result(char filename[], string result) {
+void write_result(char filename[], string result) {
     function_result.open(filename, fstream::in | fstream::out | fstream::app);
     function_result << result << "\n";
     function_result.close();
@@ -39,7 +38,7 @@ void result_listener() {
 
     while (!done) {
         while (notified_result_listener) {
-            write_function_result(const_cast<char *>(filename), to_string(current_function_value));
+            write_result(const_cast<char *>(filename), to_string(current_function_value));
 
             notified_result_listener = false;
             notified_logger = true;
@@ -49,7 +48,7 @@ void result_listener() {
     }
 }
 
-void factorial_calculation(int n) {
+void fact_calc(int n) {
     for (; current_argument_value <= n; current_argument_value++) {
         this_thread::sleep_for(chrono::seconds(1));
         unique_lock<mutex> lock(cv_m);
@@ -64,7 +63,7 @@ void factorial_calculation(int n) {
     variable.notify_all();
 }
 
-void log_writer() {
+void logger() {
     const char filename[] = "../log";
     init_file(const_cast<char *>(filename));
 
@@ -76,16 +75,16 @@ void log_writer() {
             time_t now = time(0);
             string initialized_time = ctime(&now);
             shared_ptr<Point> current_point(new Point(current_argument_value - 1, current_function_value, initialized_time));
-            write_function_result(const_cast<char *>(filename), current_point -> log_value());
+            write_result(const_cast<char *>(filename), current_point->log_value());
         }
         variable.wait(lock);
     }
 }
 
 int main() {
-    thread factorial(factorial_calculation, 10);
+    thread factorial(fact_calc, 8);
     thread result(result_listener);
-    thread log(log_writer);
+    thread log(logger);
 
     factorial.join();
     result.join();

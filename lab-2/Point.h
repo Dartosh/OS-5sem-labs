@@ -21,12 +21,12 @@ public:
 
     string log_value() {
         string record = to_string(this -> x) + " " + to_string(this -> y) + " " + this -> initialized_time + "\n";
-        make_deletable();
+        set_deletable();
         return record;
     }
 
 private:
-    void make_deletable() {
+    void set_deletable() {
         this -> deletable = true;
     }
 };
