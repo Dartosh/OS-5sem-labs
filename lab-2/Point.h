@@ -7,7 +7,7 @@ public:
     int y;
     bool deletable = false;
     string initialized_time;
-
+    string writed_time;
     Point(int x_value, int y_value, string initialized_time) {
         this -> x = x_value;
         this -> y = y_value;
@@ -20,7 +20,9 @@ public:
     }
 
     string log_value() {
-        string record = to_string(this -> x) + " " + to_string(this -> y) + " " + this -> initialized_time + "\n";
+        time_t now = time(0);
+        this -> writed_time = ctime(&now);
+        string record = to_string(this -> x) + " " + to_string(this -> y) + " init: " + this -> initialized_time + " writed:" + this -> writed_time + "\n";
         set_deletable();
         return record;
     }

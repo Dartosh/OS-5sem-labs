@@ -5,15 +5,15 @@
 #include <fstream>
 #include <string>
 #include <ctime>
-#include <memory>
 #include "Point.h"
+#include <vector>
 
 using namespace std;
 
 condition_variable variable;
+condition_variable variable_log;
+condition_variable variable_res;
 mutex cv_m;
-bool notified_result_listener = false;
-bool notified_logger = false;
 bool done = false;
 int current_function_value = 1;
 int current_argument_value = 1;
@@ -38,13 +38,8 @@ void result_listener() {
     unique_lock<mutex> lock(cv_m);
 
     while (!done) {
-        while (notified_result_listener) {
-            write_result(const_cast<char *>(filename_results), to_string(current_function_value));
-
-            notified_result_listener = false;
-            notified_logger = true;
-            variable.notify_all();
-        }
+        write_result(const_cast<char *>(filename_results), to_string(current_function_value));
+        variable_res.notify_all();
         variable.wait(lock);
     }
 }
@@ -56,7 +51,6 @@ void fact_calc(int n) {
 
         current_function_value *= current_argument_value;
 
-        notified_result_listener = true;
         variable.notify_all();
     }
 
@@ -71,19 +65,20 @@ void logger() {
     unique_lock<mutex> lock(cv_m);
 
     while (!done) {
-        while (notified_logger) {
-            notified_logger = false;
-            time_t now = time(0);
-            string initialized_time = ctime(&now);
-            current_point = std::make_shared<Point>(current_argument_value - 1, current_function_value, initialized_time);
-            write_result(const_cast<char *>(filename), current_point->log_value());
-        }
+        time_t now = time(0);
+        string initialized_time = ctime(&now);
+        this_thread::sleep_for(chrono::seconds(1));
+
+        current_point = std::make_shared<Point>(current_argument_value - 1, current_function_value,
+                                                initialized_time);
+        write_result(const_cast<char *>(filename), current_point->log_value());
+        variable_log.notify_all();
         variable.wait(lock);
     }
 }
 
 int main() {
-    thread factorial(fact_calc, 5);
+    thread factorial(fact_calc, 7);
     thread result(result_listener);
     thread log(logger);
 
