@@ -1,5 +1,6 @@
 #include <iostream>
 #include <condition_variable>
+#include <memory>
 #include <thread>
 #include <fstream>
 #include <string>
@@ -16,6 +17,8 @@ bool notified_logger = false;
 bool done = false;
 int current_function_value = 1;
 int current_argument_value = 1;
+const char filename_results[] = "../results";
+shared_ptr<Point> current_point;
 fstream function_result;
 
 void init_file(char filename[]) {
@@ -30,15 +33,13 @@ void write_result(char filename[], string result) {
 }
 
 void result_listener() {
-    const char filename[] = "../results";
-
-    init_file(const_cast<char *>(filename));
+    init_file(const_cast<char *>(filename_results));
 
     unique_lock<mutex> lock(cv_m);
 
     while (!done) {
         while (notified_result_listener) {
-            write_result(const_cast<char *>(filename), to_string(current_function_value));
+            write_result(const_cast<char *>(filename_results), to_string(current_function_value));
 
             notified_result_listener = false;
             notified_logger = true;
@@ -74,7 +75,7 @@ void logger() {
             notified_logger = false;
             time_t now = time(0);
             string initialized_time = ctime(&now);
-            shared_ptr<Point> current_point(new Point(current_argument_value - 1, current_function_value, initialized_time));
+            current_point = std::make_shared<Point>(current_argument_value - 1, current_function_value, initialized_time);
             write_result(const_cast<char *>(filename), current_point->log_value());
         }
         variable.wait(lock);
@@ -82,7 +83,7 @@ void logger() {
 }
 
 int main() {
-    thread factorial(fact_calc, 8);
+    thread factorial(fact_calc, 5);
     thread result(result_listener);
     thread log(logger);
 
